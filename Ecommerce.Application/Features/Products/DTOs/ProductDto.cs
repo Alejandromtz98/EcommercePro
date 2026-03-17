@@ -12,6 +12,7 @@ namespace Ecommerce.Application.Features.Products.DTOs
         string Description,
         decimal Price,
         int Stock,
-        string CategoryName
+        string CategoryName// Incluimos el nombre de la categoría para facilitar la visualización en la respuesta,
+                           // aunque no es parte de la entidad Product
         );
 }
