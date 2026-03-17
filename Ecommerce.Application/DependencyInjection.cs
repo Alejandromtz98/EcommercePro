@@ -9,16 +9,19 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        var assembly = Assembly.GetExecutingAssembly();
+
+        //1.Validaciones
+        services.AddValidatorsFromAssembly(assembly);
+        //2.Mapeos
+        services.AddAutoMapper(assembly);
+        //3.MediatR
         services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
-
-            //Comportamiento automatico
+            cfg.RegisterServicesFromAssembly(assembly);
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(Common.Behaviors.ValidationBehavior<,>));
         });
 
-        // Aquí agregaremos FluentValidation más adelante
         return services;
     }
 }
