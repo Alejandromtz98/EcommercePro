@@ -47,7 +47,7 @@ namespace Ecommerce.Application.Features.Products.Commands.CreateProduct
            */
            var product = _mapper.Map<Product>(request); // Usamos AutoMapper para mapear el comando a la entidad Product
             //2. Persistencia
-            _context.Products.Add(product);
+            _context.Add(product);
             await _context.SaveChangesAsync(cancellationToken);
 
             //3. Retornamos el Id del producto creado

@@ -21,6 +21,14 @@ namespace Ecommerce.Infrastructure.Persistence
         public DbSet<Order> Orders => Set<Order>(); 
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 
+        IQueryable<Product> IApplicationDbContext.Products => Products;
+        IQueryable<Category> IApplicationDbContext.Categories => Categories;
+        IQueryable<Order> IApplicationDbContext.Orders => Orders;
+
+        public new void Add<T>(T entity) where T : class
+        {
+            base.Add(entity);
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Regla Senior: No configures tablas aqui

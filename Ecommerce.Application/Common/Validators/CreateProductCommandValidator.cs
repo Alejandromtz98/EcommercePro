@@ -56,6 +56,7 @@ namespace Ecommerce.Application.Common.Validationes
             // .IgnoreQueryFilters() hace que EF ignore el "IsActive == true" 
             // y busque en absolutamente todos los registros.
             var exists = await _context.Products
+                .AsNoTracking()
                 .IgnoreQueryFilters()
                 .AnyAsync(p => p.Name.ToLower() == name.ToLower(), cancellationToken);
 

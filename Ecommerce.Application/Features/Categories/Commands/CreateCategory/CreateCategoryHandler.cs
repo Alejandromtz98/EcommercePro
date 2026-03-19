@@ -23,7 +23,7 @@ namespace Ecommerce.Application.Features.Categories.Commands.CreateCategory
                  request.Name,
                  request.Description
             );
-            _context.Categories.Add(category);
+            _context.Add(category);
             await _context.SaveChangesAsync(cancellationToken);
 
             return category.Id;

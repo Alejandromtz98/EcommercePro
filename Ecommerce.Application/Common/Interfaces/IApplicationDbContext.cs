@@ -10,10 +10,10 @@ namespace Ecommerce.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
-        DbSet<Product> Products { get; }
-        DbSet<Category> Categories { get; }
-        DbSet<Order> Orders { get; }
-
+        IQueryable<Product> Products { get; }
+        IQueryable<Category> Categories { get; }
+        IQueryable<Order> Orders { get; }
+        void Add<T>(T entity) where T : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
