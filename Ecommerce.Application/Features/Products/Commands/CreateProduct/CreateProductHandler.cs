@@ -7,6 +7,7 @@ using Ecommerce.Domain.Entitties;
 using Ecommerce.Application.Common.Interfaces;
 using MediatR;
 using FluentValidation;
+using AutoMapper;
 
 namespace Ecommerce.Application.Features.Products.Commands.CreateProduct
 {
@@ -14,11 +15,13 @@ namespace Ecommerce.Application.Features.Products.Commands.CreateProduct
     {
         private readonly IApplicationDbContext _context;
         private readonly IValidator<CreateProductCommand> _validator; // Inyecta el validador
+        private readonly IMapper _mapper; // Inyecta AutoMapper
 
-        public CreateProductHandler(IApplicationDbContext context, IValidator<CreateProductCommand> validator)
+        public CreateProductHandler(IApplicationDbContext context, IValidator<CreateProductCommand> validator, IMapper mapper )
         {
             _context = context;
             _validator = validator;
+            _mapper = mapper;
         }
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
@@ -35,13 +38,14 @@ namespace Ecommerce.Application.Features.Products.Commands.CreateProduct
             */
             //Usando Pipeline de MediatR, la validación se ejecutará automáticamente antes de llegar a este punto, por lo que no es necesario validar manualmente aquí.
             // 1. Creamos la entidad usando nuestro constructor blindado
-            var product = new Product(
+           /* var product = new Product(
                 name: request.Name,
                 description: request.Description,
                 price: request.Price,
                 stock: request.Stock,
                 categoryId: request.CategoryId);
-
+           */
+           var product = _mapper.Map<Product>(request); // Usamos AutoMapper para mapear el comando a la entidad Product
             //2. Persistencia
             _context.Products.Add(product);
             await _context.SaveChangesAsync(cancellationToken);

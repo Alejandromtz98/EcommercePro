@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Ecommerce.Application.Features.Products.Commands.CreateProduct;
+using Ecommerce.Application.Features.Products.DTOs;
 using MediatR;
 using Ecommerce.Application.Features.Products.Queries.GetProducts;
 using Ecommerce.Application.Features.Products.Queries.DeleteProduct;
 using Ecommerce.Application.Features.Products.Commands.UpdateStock;
+using Ecommerce.Application.Features.Products.Commands.CreateProduct;
+using AutoMapper;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -12,14 +14,17 @@ namespace Ecommerce.Api.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public ProductsController(IMediator mediator)
+        private readonly IMapper _mapper;
+        public ProductsController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProductCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
         {
+            var command = _mapper.Map<CreateProductCommand>(dto);
             var result = await _mediator.Send(command);
             return Ok(result);
         }
