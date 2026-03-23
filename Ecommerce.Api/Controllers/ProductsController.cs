@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Ecommerce.Application.Features.Products.DTOs;
-using MediatR;
-using Ecommerce.Application.Features.Products.Queries.GetProducts;
-using Ecommerce.Application.Features.Products.Queries.DeleteProduct;
-using Ecommerce.Application.Features.Products.Commands.UpdateStock;
+﻿using AutoMapper;
+using Ecommerce.Application.Common.Models;
 using Ecommerce.Application.Features.Products.Commands.CreateProduct;
-using AutoMapper;
+using Ecommerce.Application.Features.Products.Commands.UpdateStock;
+using Ecommerce.Application.Features.Products.Commands.UpdatrProduct;
+using Ecommerce.Application.Features.Products.DTOs;
+using Ecommerce.Application.Features.Products.Queries.DeleteProduct;
+using Ecommerce.Application.Features.Products.Queries.GetProducts;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -15,30 +17,52 @@ namespace Ecommerce.Api.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        public ProductsController(IMediator mediator, IMapper mapper)
+        private readonly ISender _sender;
+        public ProductsController(IMediator mediator, IMapper mapper, ISender sender)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _sender = sender;
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
         {
             var command = _mapper.Map<CreateProductCommand>(dto);
             var result = await _mediator.Send(command);
             return Ok(result);
         }
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetProductsQuery());
             return Ok(result);
         }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+
+        [HttpGet]
+        [ProducesResponseType(typeof(PaginatedList<ProductDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PaginatedList<ProductDto>>> GetProducts(
+        [FromQuery] GetProductsQuery query)
         {
-            await _mediator.Send(new DeleteProductCommand(id));
-            return NoContent(); // Devuelve un resultado adecuado para eliminación
+            // El mediador se encarga de buscar el Handler que ya testeamos
+            var result = await _sender.Send(query);
+
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Update(Guid id, UpdateProductCommand command)
+        {
+            if (id != command.Id) return BadRequest("El ID de la URL no coincide con el del cuerpo.");
+
+            await _mediator.Send(command);
+            return NoContent();
         }
         [HttpPatch("{id}/stock")]
         public async Task<IActionResult> UpdateStock(Guid id, UpdateProductStockCommand command)

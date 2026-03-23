@@ -69,6 +69,18 @@ namespace Ecommerce.Domain.Entitties
                 throw new InsufficientStockException(Name, quantity, Stock);
             Stock -= quantity;
         }
+        public void UpdateProduct(string name, string description, decimal price, int stock, Guid categoryId)
+        {
+            if (price <= 0)
+                throw new ArgumentException("El nuevo precio debe ser mayor a cero", nameof(price));
+            if (stock <= 0)
+                throw new ArgumentException("La nueva cantidad a agregar debe ser mayor a cero", nameof(stock));
+            Name = name;
+            Description = description;
+            Price = price;
+            Stock = stock;
+            CategoryId = categoryId;
+        }
     }
 
 }

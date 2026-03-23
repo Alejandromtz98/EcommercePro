@@ -9,7 +9,10 @@ builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
         options.SuppressModelStateInvalidFilter = true); // Deshabilitar el filtro de validación automática
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen( c =>
+{
+    c.CustomSchemaIds(type => type.FullName);
+});
 
 //Capas de arquitectuta
 builder.Services.AddInfrastructure(builder.Configuration); //SQL y DbContext
