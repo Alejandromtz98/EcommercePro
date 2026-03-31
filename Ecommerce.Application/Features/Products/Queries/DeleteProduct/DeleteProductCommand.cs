@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ecommerce.Application.Common.Exceptions;
 using Ecommerce.Application.Common.Interfaces;
+using Ecommerce.Domain.Entitties;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,10 +23,11 @@ namespace Ecommerce.Application.Features.Products.Queries.DeleteProduct
         }
         public async Task Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
+
             var product = await _context.Products
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
             if (product == null) 
-                throw new Exception("Producto no encontrado");
+                throw new NotFoundException(nameof(Product), request.Id);
             product.Desactivate(); // Cambia el estado a inactivo en lugar de eliminar
 
             await _context.SaveChangesAsync(cancellationToken);

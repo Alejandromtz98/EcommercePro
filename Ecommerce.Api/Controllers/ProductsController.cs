@@ -72,5 +72,14 @@ namespace Ecommerce.Api.Controllers
             await _mediator.Send(command);
             return NoContent();
         }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)] //Exito
+        [ProducesResponseType(StatusCodes.Status404NotFound)] //No existe el producto
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] //Error en la solicitud
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _mediator.Send(new DeleteProductCommand(id));
+            return NoContent();
+        }
     }
 }

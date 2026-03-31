@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.Common.Interfaces;
+﻿using Ecommerce.Application.Common.Exceptions;
+using Ecommerce.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,7 +22,7 @@ namespace Ecommerce.Application.Features.Products.Commands.UpdatrProduct
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
             if (entity == null) 
-                throw new KeyNotFoundException($"No se encontró un producto con el ID {request.Id}.");
+                throw new NotFoundException($"No se encontró un producto con el ID {request.Id}.");
 
             entity.UpdateProduct(
                 request.Name,

@@ -18,8 +18,18 @@ namespace Ecommerce.Domain.Entitties
         public Guid CategoryId { get; private set; }
         public bool IsActive { get; set; } = true;
         public byte[] RowVersion { get; private set; } = null!; // Para control de concurrencia optimista
+        private DateTime LastModified { get; set; } = DateTime.UtcNow;
 
-        public void Desactivate() => IsActive = false;
+        public void Desactivate() 
+        {
+                if(this.Stock > 0)
+                throw new InvalidOperationException($"No se puede desactivar el producto '{this.Name}' por que aun tiene {this.Stock} unidades en stock");
+
+            if (!IsActive) return; //Idempotencia: si ya esta desactivada, no hace nada
+
+            this.IsActive = false;
+            this.LastModified = DateTime.UtcNow;
+        }
         //Linea para que funcione el Include en el DTO
         //Definir FK explicitamente
         //Vincular con el atributo
