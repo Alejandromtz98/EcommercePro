@@ -1,6 +1,6 @@
 ﻿using Ecommerce.Application.Common.Interfaces;
 using Ecommerce.Application.Features.Products.Commands.UpdatrProduct;
-using Ecommerce.Domain.Entitties;
+using Ecommerce.Domain.Entities;
 using FluentAssertions;
 using NSubstitute;
 using MockQueryable;

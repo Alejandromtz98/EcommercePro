@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ecommerce.Domain.Entitties
+namespace Ecommerce.Domain.Entities
 {
     public class OrderItem
     {

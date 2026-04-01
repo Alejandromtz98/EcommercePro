@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ecommerce.Domain.Entitties;
+﻿using Ecommerce.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ecommerce.Application.Common.Interfaces
+namespace Ecommerce.Application.Common.Interfaces;
+
+public interface IApplicationDbContext
 {
-    public interface IApplicationDbContext
-    {
-        IQueryable<Product> Products { get; }
-        IQueryable<Category> Categories { get; }
-        IQueryable<Order> Orders { get; }
-        void Add<T>(T entity) where T : class;
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-    }
+    // Usamos DbSet directamente para tener acceso a Add, Remove, etc.
+    DbSet<Product> Products { get; }
+    DbSet<Category> Categories { get; }
+    DbSet<Order> Orders { get; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

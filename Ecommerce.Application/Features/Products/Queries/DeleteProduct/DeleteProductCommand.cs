@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ecommerce.Application.Common.Exceptions;
 using Ecommerce.Application.Common.Interfaces;
-using Ecommerce.Domain.Entitties;
+using Ecommerce.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ecommerce.Domain.Entitties;
+using Ecommerce.Domain.Entities;
 using Ecommerce.Application.Common.Interfaces;
 using MediatR;
 using FluentValidation;
@@ -47,7 +47,7 @@ namespace Ecommerce.Application.Features.Products.Commands.CreateProduct
            */
            var product = _mapper.Map<Product>(request); // Usamos AutoMapper para mapear el comando a la entidad Product
             //2. Persistencia
-            _context.Add(product);
+            _context.Products.Add(product);
             await _context.SaveChangesAsync(cancellationToken);
 
             //3. Retornamos el Id del producto creado

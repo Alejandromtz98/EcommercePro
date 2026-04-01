@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ecommerce.Domain.Entitties;
+using Ecommerce.Domain.Entities;
 using Ecommerce.Application.Common.Interfaces;
 using MediatR;
 
@@ -23,7 +23,7 @@ namespace Ecommerce.Application.Features.Categories.Commands.CreateCategory
                  request.Name,
                  request.Description
             );
-            _context.Add(category);
+            _context.Categories.Add(category);
             await _context.SaveChangesAsync(cancellationToken);
 
             return category.Id;

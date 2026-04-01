@@ -8,6 +8,9 @@ using Ecommerce.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Ecommerce.Infrastructure.Persistence.Interceptors;
+using Ecommerce.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace Ecommerce.Infrastructure
@@ -17,19 +20,33 @@ namespace Ecommerce.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options =>
+
+            // 1. Registrar el Interceptor
+            services.AddScoped<AuditableEntityInterceptor>();
+
+            // 2. Configuración ÚNICA del DbContext
+            services.AddDbContext<ApplicationDbContext>((sp, options) =>
+            {
+                var interceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
+
                 options.UseSqlServer(connectionString, sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(
-                            maxRetryCount: 5, // Número máximo de reintentos
-                            maxRetryDelay: TimeSpan.FromSeconds(10), // Tiempo máximo de espera entre reintento
-                            errorNumbersToAdd: null
-                        ); // Habilita reintentos automáticos en
-                }));
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorNumbersToAdd: null);
+                })
+                .AddInterceptors(interceptor); // Agregamos el interceptor aquí
+            });
 
-            //Mapeo de la interfaz al contexto real
+            // 3. Registro de Identity (Asegúrate de tener el using Microsoft.AspNetCore.Identity)
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            // 4. Mapeo de la interfaz para Clean Architecture
             services.AddScoped<IApplicationDbContext>(provider =>
-            provider.GetRequiredService<ApplicationDbContext>());
+                provider.GetRequiredService<ApplicationDbContext>());
 
             return services;
         }

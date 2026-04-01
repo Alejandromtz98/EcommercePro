@@ -10,7 +10,7 @@ namespace Ecommerce.Domain
     {
        public void Test()
         {
-            var category = new Entitties.Category("Electronics", "All electronic items");
+            var category = new Entities.Category("Electronics", "All electronic items");
         }
     }
 }

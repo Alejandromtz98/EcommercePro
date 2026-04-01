@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ecommerce.Domain.Entitties;
+using Ecommerce.Domain.Entities;
 using Ecommerce.Application.Features.Products.DTOs;
 using FluentValidation;
 using AutoMapper;

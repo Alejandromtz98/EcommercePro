@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 using Ecommerce.Domain.Common;
 
-namespace Ecommerce.Domain.Entitties
+namespace Ecommerce.Domain.Entities
 {
-    public class Product : ISoftDelete
+    public class Product : BaseAuditableEntity, ISoftDelete
     {
         public Guid Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
@@ -18,7 +18,6 @@ namespace Ecommerce.Domain.Entitties
         public Guid CategoryId { get; private set; }
         public bool IsActive { get; set; } = true;
         public byte[] RowVersion { get; private set; } = null!; // Para control de concurrencia optimista
-        private DateTime LastModified { get; set; } = DateTime.UtcNow;
 
         public void Desactivate() 
         {
@@ -28,7 +27,6 @@ namespace Ecommerce.Domain.Entitties
             if (!IsActive) return; //Idempotencia: si ya esta desactivada, no hace nada
 
             this.IsActive = false;
-            this.LastModified = DateTime.UtcNow;
         }
         //Linea para que funcione el Include en el DTO
         //Definir FK explicitamente

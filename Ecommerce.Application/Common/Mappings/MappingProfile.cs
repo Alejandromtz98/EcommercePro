@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Ecommerce.Application.Features.Products.Commands.CreateProduct;
 using Ecommerce.Application.Features.Products.DTOs;
-using Ecommerce.Domain.Entitties;
+using Ecommerce.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
